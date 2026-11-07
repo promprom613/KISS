@@ -116,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements QueryInterface, K
      * Kiss bar
      */
     public View kissBar;
+    private boolean p3xBarsHidden = false;
+    private int p3xSearchVisibility = View.VISIBLE;
+    private int p3xFavVisibility = View.VISIBLE;
     /**
      * Favorites bar. Can be either the favorites within the KISS bar,
      * or the external favorites bar (default)
@@ -752,18 +755,27 @@ public class MainActivity extends AppCompatActivity implements QueryInterface, K
 
             updateSearchRecords(false, searchEditText.getText().toString());
 
-            // Reveal the bar
-            int animationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            // prom3x: no kiss bar, no search bar, no circle while the app list is open.
+            // The list takes the whole screen (search lives on the home screen).
+            View p3xSearchLayout = findViewById(R.id.searchEditLayout);
+            View p3xFavBar = findViewById(R.id.externalFavoriteBar);
+            if (!p3xBarsHidden) {
+                p3xSearchVisibility = p3xSearchLayout.getVisibility();
+                p3xFavVisibility = p3xFavBar.getVisibility();
+                p3xBarsHidden = true;
+            }
+            p3xSearchLayout.setVisibility(View.GONE);
+            p3xFavBar.setVisibility(View.GONE);
 
-            Animator anim = ViewAnimationUtils.createCircularReveal(kissBar, cx, cy, 0, finalRadius);
-            anim.setDuration(animationDuration);
-            anim.start();
-            kissBar.setVisibility(View.VISIBLE);
-
-            // Display the alphabet on the scrollbar (#926)
-            list.setFastScrollEnabled(true);
+            // No alphabet scrollbar
+            list.setFastScrollEnabled(false);
         } else {
             isDisplayingKissBar = false;
+            if (p3xBarsHidden) {
+                findViewById(R.id.searchEditLayout).setVisibility(p3xSearchVisibility);
+                findViewById(R.id.externalFavoriteBar).setVisibility(p3xFavVisibility);
+                p3xBarsHidden = false;
+            }
             // Hide the bar
             int animationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 

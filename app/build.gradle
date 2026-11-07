@@ -26,8 +26,19 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        p3x {
+            storeFile file('p3x.keystore')
+            storePassword 'p3xkiss'
+            keyAlias 'p3x'
+            keyPassword 'p3xkiss'
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.p3x
+            applicationIdSuffix '.p3x'
             minifyEnabled true
             shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

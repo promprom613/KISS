@@ -54,6 +54,7 @@
             android:cacheColorHint="@android:color/transparent"
             android:divider="?attr/dividerDrawable"
             android:dividerHeight="1dp"
+            android:scrollbars="none"
             android:stackFromBottom="true"
             android:transcriptMode="alwaysScroll"
             tools:listitem="@layout/item_app" />
