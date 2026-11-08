@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import fr.neamar.kiss.IconsHandler;
 import fr.neamar.kiss.KissApplication;
 import fr.neamar.kiss.broadcast.PackageAddedRemovedHandler;
 import fr.neamar.kiss.loader.LoadAppPojos;
@@ -24,6 +25,26 @@ import fr.neamar.kiss.utils.fuzzy.FuzzyScore;
 import fr.neamar.kiss.utils.fuzzy.MatchInfo;
 
 public class AppProvider extends Provider<AppPojo> {
+
+    @Override
+    public void loadOver(List<AppPojo> results) {
+        super.loadOver(results);
+        // prom3x: warm the icon cache in the background so the app list shows icons instantly
+        final List<AppPojo> apps = new ArrayList<>(results);
+        final android.content.Context appContext = getApplicationContext();
+        Thread preload = new Thread(() -> {
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+            try {
+                IconsHandler ih = KissApplication.getApplication(appContext).getIconsHandler();
+                for (AppPojo p : apps) {
+                    ih.getDrawableIconForPackage(p.getComponent(), p.userHandle);
+                }
+            } catch (Exception ignored) {
+                // best effort only
+            }
+        }, "p3x-icon-preload");
+        preload.start();
+    }
 
     @Override
     public void onCreate() {

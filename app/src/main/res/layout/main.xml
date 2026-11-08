@@ -59,6 +59,18 @@
             android:transcriptMode="alwaysScroll"
             tools:listitem="@layout/item_app" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="top"
+            android:background="@drawable/bg_fade_top" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_fade_bottom" />
+
         <fr.neamar.kiss.ui.BottomPullEffectView
             android:id="@+id/listEdgeEffect"
             android:layout_width="match_parent"

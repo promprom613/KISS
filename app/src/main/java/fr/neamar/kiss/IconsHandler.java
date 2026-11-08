@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.util.LruCache;
 import android.net.Uri;
 import android.os.Build;
 
@@ -209,10 +210,15 @@ public class IconsHandler {
             useCache = false;
         }
 
-        // Search in cache
+        // Search in cache (memory first, then disk)
         if (useCache) {
+            Drawable.ConstantState memState = p3xMemCache.get(cacheKey);
+            if (memState != null) {
+                return memState.newDrawable(ctx.getResources());
+            }
             Drawable cacheIcon = cacheGetDrawable(cacheKey);
             if (cacheIcon != null) {
+                p3xMemPut(cacheKey, cacheIcon);
                 return cacheIcon;
             }
         }
@@ -256,6 +262,7 @@ public class IconsHandler {
         drawable = applyBadge(drawable, userHandle);
         if (useCache) {
             storeDrawable(cacheGetFileName(cacheKey), drawable);
+            p3xMemPut(cacheKey, drawable);
         }
         return drawable;
     }
@@ -503,10 +510,20 @@ public class IconsHandler {
         return dir;
     }
 
+    private final LruCache<String, Drawable.ConstantState> p3xMemCache = new LruCache<>(400);
+
+    private void p3xMemPut(String key, Drawable d) {
+        Drawable.ConstantState cs = d.getConstantState();
+        if (cs != null) {
+            p3xMemCache.put(key, cs);
+        }
+    }
+
     /**
      * Clear cache
      */
     private void cacheClear() {
+        p3xMemCache.evictAll();
         synchronized (this) {
             TagDummyResult.resetShape();
             customIconIds = null;
