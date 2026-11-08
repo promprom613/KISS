@@ -39,6 +39,10 @@ public class AnimatedListView extends BlockableListView {
     }
 
     public void animateChange() {
+        // prom3x: no list animations, everything is instant
+        if (true) {
+            return;
+        }
         if (mItemMap.isEmpty())
             return;
 

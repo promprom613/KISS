@@ -60,16 +60,20 @@
             tools:listitem="@layout/item_app" />
 
         <View
+            android:id="@+id/fadeTop"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="top"
-            android:background="@drawable/bg_fade_top" />
+            android:background="@drawable/bg_fade_top"
+            android:visibility="gone" />
 
         <View
+            android:id="@+id/fadeBottom"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="bottom"
-            android:background="@drawable/bg_fade_bottom" />
+            android:background="@drawable/bg_fade_bottom"
+            android:visibility="gone" />
 
         <fr.neamar.kiss.ui.BottomPullEffectView
             android:id="@+id/listEdgeEffect"

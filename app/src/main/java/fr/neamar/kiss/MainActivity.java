@@ -741,11 +741,15 @@ public class MainActivity extends AppCompatActivity implements QueryInterface, K
             }
             p3xSearchLayout.setVisibility(View.GONE);
             p3xFavBar.setVisibility(View.GONE);
+            findViewById(R.id.fadeTop).setVisibility(View.VISIBLE);
+            findViewById(R.id.fadeBottom).setVisibility(View.VISIBLE);
 
             // No alphabet scrollbar
             list.setFastScrollEnabled(false);
         } else {
             isDisplayingKissBar = false;
+            findViewById(R.id.fadeTop).setVisibility(View.GONE);
+            findViewById(R.id.fadeBottom).setVisibility(View.GONE);
             if (p3xBarsHidden) {
                 findViewById(R.id.searchEditLayout).setVisibility(p3xSearchVisibility);
                 findViewById(R.id.externalFavoriteBar).setVisibility(p3xFavVisibility);

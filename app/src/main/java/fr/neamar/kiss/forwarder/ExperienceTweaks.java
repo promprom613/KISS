@@ -135,10 +135,56 @@ public class ExperienceTweaks extends Forwarder {
                 return super.onDoubleTap(e);
             }
 
+            // prom3x: trigger the swipe action while the finger is still moving (no waiting for release)
+            private boolean p3xFired = false;
+
+            @Override
+            public boolean onDown(@NonNull MotionEvent e) {
+                p3xFired = false;
+                return super.onDown(e);
+            }
+
+            @Override
+            public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
+                if (e1 == null || p3xFired) {
+                    return false;
+                }
+                float dy = e2.getY() - e1.getY();
+                float dx = e2.getX() - e1.getX();
+                float threshold = 40f * mainActivity.getResources().getDisplayMetrics().density;
+                String key = null;
+                if (Math.abs(dy) > threshold && Math.abs(dy) > Math.abs(dx) * 1.5f) {
+                    key = dy > 0 ? "gesture-down" : "gesture-up";
+                } else if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy) * 1.5f) {
+                    key = dx > 0 ? "gesture-right" : "gesture-left";
+                }
+                if (key == null) {
+                    return false;
+                }
+                String def;
+                switch (key) {
+                    case "gesture-down":
+                        def = "display-notifications";
+                        break;
+                    case "gesture-up":
+                        def = "display-keyboard";
+                        break;
+                    default:
+                        def = "display-apps";
+                        break;
+                }
+                p3xFired = true;
+                doAction(key, prefs.getString(key, def));
+                return true;
+            }
+
             @Override
             public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
                 if (e1 == null) {
                     return false;
+                }
+                if (p3xFired) {
+                    return true;
                 }
                 float directionY = e2.getY() - e1.getY();
                 float directionX = e2.getX() - e1.getX();
