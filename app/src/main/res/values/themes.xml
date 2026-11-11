@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">@color/kiss_green_dark</item>
         <item name="colorAccent">@color/kiss_green</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="appSelectableItemBackground">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="appSelectableItemBackground">@android:color/transparent</item>
         <item name="textShadowRadius">0</item>
     </style>
 
